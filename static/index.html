@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AICheckers</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.js"></script>
+  <script src="bower_components/chessboard-js/js/chessboard.min.js"></script>
+  <link rel="stylesheet" href="bower_components/chessboard-js/css/chessboard.min.css">
+  <script src="/socket.io/socket.io.js"></script>
+  
+    
+  <style>
+    
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    
+    .row.content {height: 450px}
+    
+    
+    .sidenav {
+      padding-top: 20px;
+      background-color: '#ddd';
+      height: 100vh;
+    }
+    
+    
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+    #myBoard div.chess_board div.chess_player_black.chess_piece_pawn {
+      background-image: url('black.png');
+    }
+    #myBoard div.chess_board div.chess_player_white.chess_piece_pawn {
+      background-image: url('red.png');
+    }
+    #my-board-checkers div.chess_board div.chess_player_black.chess_piece_pawn:after,
+    #my-board-checkers div.chess_board div.chess_player_white.chess_piece_pawn:after {
+  content: '';
+  }
+
+  #evalSelection {
+    font-weight: bold;
+    font-size:100%;
+  }
+
+  #groupedFields{
+    text-align: left;
+  }
+  
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">AICheckers</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li ><a onclick="gameEnd()">Home</a></li>
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center" style="background-color: #ddd">    
+  <div class="row content">
+    
+    <div class="col-sm-7 text-left" style="text-align: center;"> 
+    <br>
+
+
+    <div id="myBoard" style="width: 80%"></div>
+     
+    </div>
+    <div class="col-sm-5 sidenav" id="sideNav">
+
+    <div class='jumbotron' style="text-align: center; background-color: white">
+      <h2>AICheckers</h2>
+      <p style='font-size:14px;''>Multiplayer online checkers</p>
+       </div>
+       
+
+       <div class="ui fluid form" id="userForm">
+       <div class="field" >
+          <input type="text" placeholder="Username" id="fieldUsername">
+          <div class="ui pointing label" style="background-color: white">
+           Please enter a username to start playing
+          </div>
+      </div>
+      <button class="ui secondary button" type="submit" onclick='sendUsername()'>Submit</button>
+      <div id="userFormError"></div>
+      </div>
+       
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  <p>Developed by Francesco Galloni</p>
+</footer>
+
+<div id="disconnectedModal" class="ui basic modal" >
+  <div class="ui icon header">
+    <i class="remove user icon"></i>
+    <p>Opponent disconnected!</p>
+  </div>
+  <div class="content">
+    <p>Sorry but your opponent get disconnected, select the game mode if you want to continue playing</p>
+  </div>
+  <div class="actions">
+    <div class="ui inverted button" onclick="hideModal()">
+     Ok
+    </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="gameEndedModal" class="ui basic modal" onhide="onModalClose()" style="text-align: center;">
+  <div class="ui icon header">
+    <i id="modalIcon" class="remove user icon"></i>
+    <p id="bigModalText"></p>
+  </div>
+  <div class="content">
+    <p id="smallModalText"></p>
+  </div>
+  <div class="actions">
+    <div class="ui inverted button" onclick="hideModal()">
+     Ok
+    </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+</body>
+<script type="text/javascript" src='script.js'></script>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
