@@ -562,8 +562,11 @@ var startPosition = {
                 pieceLegalmoves=getLegalMoves(index);
                 }
                 pieceLegalID=[];
+                var eatingObligation=checkEatingObligation();
                 for (var i = 0; i < pieceLegalmoves.length; i++) {
+                    if((eatingObligation && pieceLegalmoves[i].eatenIndex!="")|| eatingObligation==false){
                     pieceLegalID.push(indexConversion(pieceLegalmoves[i]));
+                  }
                     
                 }
                 highlightLegalMoves(pieceLegalID);
@@ -935,6 +938,42 @@ var startPosition = {
           }
 
         }
+
+
+        function checkEatingObligation(){
+            var className;
+            var pieces;
+            if(color=="black"){
+             className="chess_piece chess_piece_pawn chess_player_black";
+             pieces=document.getElementsByClassName(className);
+            }else{
+             className="chess_piece chess_piece_pawn chess_player_white";
+             pieces=document.getElementsByClassName(className);
+           }
+
+           for (var i = 0; i < pieces.length; i++) {
+                var id=pieces[i].getAttribute("id");
+                id=id.split("myBoard_chess_piece_");
+                id=id[1];
+                var index=idConversion(id);
+                var movesArray=[];
+                movesArray=canEatAgain(index);
+                if(movesArray.length>0){
+                  return true;
+                }
+             
+           }
+
+           return false;
+
+
+        }
+
+
+
+
+
+
 
         function lostModal(){
 

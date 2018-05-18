@@ -296,6 +296,7 @@ function maxValue(node,A,B,depth,evaluationType){
 function getMaxChilds(node){
   var matrix=rotateMatrix(node.matrix);
   var nodeChilds=[];
+  var eatenTrue=checkEatingObligation(matrix,1,2,3,4);
   for (var i = 0; i < matrix.length; i++) {
     for (var j = 0; j < matrix[i].length; j++) {
        if(matrix[i][j]==3 || matrix[i][j]==4){
@@ -323,6 +324,7 @@ function getMaxChilds(node){
               matrixCopy[legalMoves[y].eatenIndex.i][legalMoves[y].eatenIndex.j]=0;
               eatenIndexes.push(legalMoves[y].eatenIndex);
               eatControl=true;
+              
               
             }
 
@@ -352,7 +354,9 @@ function getMaxChilds(node){
           }
 
           var childNode={matrix:rotateMatrix(matrixCopy),type:"min",indexFrom:index,indexTo:indexTo,eatenIndexes:eatenIndexes,stepIndexes:stepIndexes};
+          if((eatenTrue && childNode.eatenIndexes!=0)|| eatenTrue==false){
           nodeChilds.push(childNode);
+         }
 
 
 
@@ -376,6 +380,7 @@ function getMaxChilds(node){
 
 function getMinChilds(node){
   var nodeChilds=[];
+  var eatenTrue=checkEatingObligation(node.matrix,3,4,1,2);
   for (var i = 0; i < node.matrix.length; i++) {
     for (var j = 0; j < node.matrix[i].length; j++) {
       if(node.matrix[i][j]==1 || node.matrix[i][j]==2){
@@ -401,6 +406,7 @@ function getMinChilds(node){
               matrixCopy[legalMoves[y].eatenIndex.i][legalMoves[y].eatenIndex.j]=0;
               eatenIndexes.push(legalMoves[y].eatenIndex);
               eatControl=true;
+              
               
           }
 
@@ -428,7 +434,9 @@ function getMinChilds(node){
           }
 
          var childNode={matrix:matrixCopy,type:"max",indexFrom:index,indexTo:indexTo,eatenIndexes:eatenIndexes};
+         if((eatenTrue && childNode.eatenIndexes!=0)|| eatenTrue==false){
          nodeChilds.push(childNode);
+        }
 
         }
        
@@ -783,6 +791,7 @@ function getWinner(matrix){
 
 function getLegalMoves(matrix,index,opponentPiece,opponentDraughts,yourDraughts){
              var legalMoves=[];
+             var eatenLegalMoves=[];
              if(matrix[index.i-1]!=undefined && matrix[index.i-1][index.j-1]!=undefined && matrix[index.i-1][index.j-1]==0){
                 var possibleMove={i:index.i-1,j:index.j-1,eatenCount:0,eatenIndex:""};
                 legalMoves.push(possibleMove);
@@ -836,8 +845,10 @@ function getLegalMoves(matrix,index,opponentPiece,opponentDraughts,yourDraughts)
                   }
                 }
              }
-
+            
+            
             return legalMoves;
+           
 
         }
 
@@ -892,6 +903,27 @@ function getLegalMoves(matrix,index,opponentPiece,opponentDraughts,yourDraughts)
             return legalMoves;
 
         }
+
+
+
+
+  function checkEatingObligation(matrix,opponentPiece,opponentDraughts,yourPiece,yourDraughts){
+    for (var i = 0; i < matrix.length; i++) {
+      for (var j = 0; j < matrix[i].length; j++) {
+         if((matrix[i][j]==yourPiece) || (matrix[i][j]==yourDraughts)){
+          var index={i:i,j:j};
+          var movesArray=[];
+          movesArray=canEatAgain(matrix,index,opponentPiece,opponentDraughts,yourDraughts);
+          if(movesArray.length>0){
+            return true;
+          }
+             
+         }
+
+      }
+    }
+    return false;
+  }
 
 
 
